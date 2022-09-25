@@ -1,0 +1,42 @@
+@import "colors.css";
+@import "fonts.css";
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+
+  font: inherit;
+  font-weight: var(--fw-text);
+
+  box-sizing: border-box;
+
+  outline-width: 2px;
+  outline-offset: 10px;
+
+  transition: 200ms outline-offset;
+}
+
+*:is(:focus-visible, :focus-within) {
+  outline-offset: 0;
+}
+
+*:focus-visible {
+  outline-style: solid;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 1.8rem;
+  font-family: var(--ff-text);
+}
