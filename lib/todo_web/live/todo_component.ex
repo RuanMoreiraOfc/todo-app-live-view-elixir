@@ -5,7 +5,7 @@ defmodule TodoWeb.TodoComponent do
     id_text = "text-" <> assigns.id
 
     ~H"""
-      <li id={@id} class="todo">
+      <li id={@id} class="todo" data-test="todo">
         <input
           type="checkbox"
           class="todo-checkbox"
