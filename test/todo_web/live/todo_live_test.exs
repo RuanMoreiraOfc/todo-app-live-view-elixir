@@ -42,6 +42,19 @@ defmodule TodoWeb.TodoLiveTest do
     assert has_element?(view, "[data-test=todo-toggle]:checked")
   end
 
+  test "user can delete a todo", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/")
+
+    view
+    |> create_todo("a")
+    |> create_todo("b")
+    |> element("[data-test=todo]:nth-child(1) [data-test=todo-delete]")
+    |> render_click()
+
+    assert has_element?(view, "[data-test=todo]", "a") === false
+    assert has_element?(view, "[data-test=todo]", "b")
+  end
+
   # HELPERS
 
   defp create_todo(view, title) do

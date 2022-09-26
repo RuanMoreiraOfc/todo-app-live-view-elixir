@@ -21,6 +21,7 @@ defmodule TodoWeb.TodoComponent do
 
         <button
           class="todo-close reset-all"
+          data-test="todo-delete"
           aria-label="Delete todo"
           phx-click="delete-todo"
           phx-value-id={@id}
