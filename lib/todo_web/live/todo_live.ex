@@ -67,4 +67,14 @@ defmodule TodoWeb.TodoLive do
        uncompleted_count: old_uncompleted_count - 1
      )}
   end
+
+  def handle_event("clear-completed", _params, socket) do
+    filtered_todos = Enum.map(socket.assigns.todos, fn todo -> !todo.completed? end)
+
+    {:noreply,
+     assign(socket,
+       todos: filtered_todos,
+       uncompleted_count: Enum.count(filtered_todos, fn todo -> !todo.completed? end)
+     )}
+  end
 end
