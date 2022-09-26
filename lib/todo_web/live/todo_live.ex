@@ -50,19 +50,10 @@ defmodule TodoWeb.TodoLive do
     |> send_complete_response(socket)
   end
 
-  def handle_event("delete-todo", %{"id" => id}, socket) do
-    %{
-      todos: old_todos,
-      uncompleted_count: old_uncompleted_count
-    } = socket.assigns
-
-    todo = Enum.find(old_todos, fn todo -> todo.id === id end)
-
-    {:noreply,
-     assign(socket,
-       todos: old_todos -- [todo],
-       uncompleted_count: old_uncompleted_count - 1
-     )}
+  def handle_event("set-filter", %{"current" => current}, socket) do
+    socket
+    |> handle_all_todos(:filter, fn todo -> todo end)
+    |> send_complete_response(assign(socket, filter_selected: String.to_atom(current)))
   end
 
   def handle_event("clear-completed", _params, socket) do
@@ -82,11 +73,30 @@ defmodule TodoWeb.TodoLive do
   end
 
   defp send_complete_response(all_todos, socket) do
+    filter = socket.assigns.filter_selected
+    filtered_todos = filter_todos(all_todos, filter)
+
     {:noreply,
      assign(socket,
-       todos: all_todos,
+       todos: filtered_todos,
        all_todos: all_todos,
-       uncompleted_count: get_uncompleted_count(all_todos)
+       uncompleted_count: get_uncompleted_count(filtered_todos)
      )}
+  end
+
+  defp filter_todos(all_todos, :all) do
+    filter_todos(all_todos, fn todo -> todo end)
+  end
+
+  defp filter_todos(all_todos, :active) do
+    filter_todos(all_todos, fn todo -> !todo.completed? end)
+  end
+
+  defp filter_todos(all_todos, :completed) do
+    filter_todos(all_todos, fn todo -> todo.completed? end)
+  end
+
+  defp filter_todos(all_todos, callback) do
+    Enum.filter(all_todos, callback)
   end
 end
