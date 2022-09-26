@@ -36,4 +36,19 @@ defmodule TodoWeb.TodoLive do
     _e ->
       {:noreply, put_flash(socket, :error, "This todo already exists!")}
   end
+
+  def handle_event("delete-todo", %{"id" => id}, socket) do
+    %{
+      todos: old_todos,
+      uncompleted_count: old_uncompleted_count
+    } = socket.assigns
+
+    todo = Enum.find(old_todos, fn todo -> todo.id === id end)
+
+    {:noreply,
+     assign(socket,
+       todos: old_todos -- [todo],
+       uncompleted_count: old_uncompleted_count - 1
+     )}
+  end
 end

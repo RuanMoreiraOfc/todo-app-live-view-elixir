@@ -15,7 +15,12 @@ defmodule TodoWeb.TodoComponent do
         <span class="todo-icon bubble" />
         <span class="todo-text" id={id_text} ><%= @title %></span>
 
-        <button class="todo-close reset-all" aria-label="Delete todo" />
+        <button
+          class="todo-close reset-all"
+          aria-label="Delete todo"
+          phx-click="delete-todo"
+          phx-value-id={@id}
+        />
         <span class="focus-within" />
       </li>
     """
