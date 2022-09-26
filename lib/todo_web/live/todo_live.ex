@@ -13,6 +13,7 @@ defmodule TodoWeb.TodoLive do
        filters: [:all, :active, :completed],
        filter_selected: :all,
        todos: [],
+       all_todos: [],
        uncompleted_count: 0
      )}
   end
@@ -22,37 +23,31 @@ defmodule TodoWeb.TodoLive do
   end
 
   def handle_event("create-todo", %{"title" => title}, socket) do
-    %{
-      todos: old_todos,
-      uncompleted_count: old_uncompleted_count
-    } = socket.assigns
+    nil = handle_all_todos(socket, :find, fn todo -> todo.title === title end)
 
-    nil = Enum.find(old_todos, :find, fn todo -> todo.title === title end)
-
-    {:noreply,
-     assign(socket,
-       todos: old_todos ++ [Todo.build(title)],
-       uncompleted_count: old_uncompleted_count + 1
-     )}
+    socket
+    |> handle_all_todos(:concat, [Todo.build(title)])
+    |> send_complete_response(socket)
   rescue
     _e ->
       {:noreply, put_flash(socket, :error, "This todo already exists!")}
   end
 
   def handle_event("toggle-todo", %{"id" => id}, socket) do
-    transformed_todos =
-      Enum.map(socket.assigns.todos, fn todo ->
-        case todo.id do
-          ^id -> %Todo{todo | completed?: !todo.completed?}
-          _ -> todo
-        end
-      end)
+    socket
+    |> handle_all_todos(:map, fn todo ->
+      case todo.id do
+        ^id -> %Todo{todo | completed?: !todo.completed?}
+        _id -> todo
+      end
+    end)
+    |> send_complete_response(socket)
+  end
 
-    {:noreply,
-     assign(socket,
-       todos: transformed_todos,
-       uncompleted_count: Enum.count(transformed_todos, fn todo -> !todo.completed? end)
-     )}
+  def handle_event("delete-todo", %{"id" => id}, socket) do
+    socket
+    |> handle_all_todos(:filter, fn todo -> todo.id !== id end)
+    |> send_complete_response(socket)
   end
 
   def handle_event("delete-todo", %{"id" => id}, socket) do
@@ -71,12 +66,27 @@ defmodule TodoWeb.TodoLive do
   end
 
   def handle_event("clear-completed", _params, socket) do
-    filtered_todos = Enum.map(socket.assigns.todos, fn todo -> !todo.completed? end)
+    socket
+    |> handle_all_todos(:filter, fn todo -> !todo.completed? end)
+    |> send_complete_response(socket)
+  end
 
+  # HELPERS
+
+  defp handle_all_todos(%{assigns: %{all_todos: all_todos}}, key, params) do
+    apply(Enum, key, [all_todos, params])
+  end
+
+  defp get_uncompleted_count(todos) do
+    Enum.count(todos, fn todo -> !todo.completed? end)
+  end
+
+  defp send_complete_response(all_todos, socket) do
     {:noreply,
      assign(socket,
-       todos: filtered_todos,
-       uncompleted_count: Enum.count(filtered_todos, fn todo -> !todo.completed? end)
+       todos: all_todos,
+       all_todos: all_todos,
+       uncompleted_count: get_uncompleted_count(all_todos)
      )}
   end
 end
