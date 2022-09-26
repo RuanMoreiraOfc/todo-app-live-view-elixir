@@ -4,11 +4,36 @@ defmodule TodoWeb.TodoLive do
   import TodoWeb.TodoComponent
   import TodoWeb.FilterComponent
 
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, darkmode?: nil)}
+  alias Todo.Todo
+
+  def mount(params, _session, socket) do
+    {:ok,
+     assign(socket,
+       darkmode?: Map.get(params, :darkmode, nil),
+       todos: [],
+       uncompleted_count: 0
+     )}
   end
 
   def handle_event("toggle-darkmode", _params, socket) do
     {:noreply, assign(socket, darkmode?: !socket.assigns.darkmode?)}
+  end
+
+  def handle_event("create-todo", %{"title" => title}, socket) do
+    %{
+      todos: old_todos,
+      uncompleted_count: old_uncompleted_count
+    } = socket.assigns
+
+    nil = Enum.find(old_todos, :find, fn todo -> todo.title === title end)
+
+    {:noreply,
+     assign(socket,
+       todos: old_todos ++ [Todo.build(title)],
+       uncompleted_count: old_uncompleted_count + 1
+     )}
+  rescue
+    _e ->
+      {:noreply, put_flash(socket, :error, "This todo already exists!")}
   end
 end

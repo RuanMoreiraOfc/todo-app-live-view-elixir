@@ -246,6 +246,11 @@ input.app-form-input,
   position: relative;
 }
 
+/* Fixme: There is whitespace so :empty can not be used */
+.app-todos-list:is(:empty, [data-empty]) ~ .app-footer {
+  border-radius: 8px;
+}
+
 .app-footer-left {
 }
 

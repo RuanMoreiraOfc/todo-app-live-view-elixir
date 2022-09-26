@@ -10,7 +10,7 @@
     />
   </header>
 
-  <form class="app-form">
+  <form class="app-form" phx-submit="create-todo">
     <label class="app-form-label">
       <span class="app-form-icon bubble" />
       <input
@@ -25,10 +25,20 @@
   </form>
 
   <section class="app-todos">
-    <ul class="app-todos-list">
-      <.todo title="do sth" description_id="a-1"/> <.todo title="do more things"
-      description_id="a-2"/> <.todo title="do any thing" description_id="a-3"/>
+    <p
+      class="alert alert-danger"
+      role="alert"
+      phx-click="lv:clear-flash"
+      phx-value-key="error"
+      hidden={is_nil(live_flash(@flash, :error))}
+    ><%= live_flash(@flash, :error) %></p>
+
+    <ul class="app-todos-list" data-empty={Enum.count(@todos) === 0}>
+      <%= for %Todo{id: id, title: title, completed?: completed?} <- @todos do %>
+        <.todo id={id} title={title} completed?={completed?}/>
+      <% end %>
     </ul>
+
     <footer class="app-footer">
       <span class="app-footer-left">
         <%= @uncompleted_count %> item<%= if @uncompleted_count == 1, do: "",
