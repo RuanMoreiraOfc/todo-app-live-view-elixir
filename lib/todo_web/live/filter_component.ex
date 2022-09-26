@@ -8,6 +8,7 @@ defmodule TodoWeb.FilterComponent do
       <li class="filter">
         <button
           class="filter-button reset-all"
+          data-test="filter-btn"
           aria-pressed={"#{@aria_pressed}"}
           phx-click="set-filter"
           phx-value-current={@children}
