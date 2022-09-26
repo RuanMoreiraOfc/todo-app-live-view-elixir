@@ -60,6 +60,35 @@
   font-weight: var(--fw-text);
 }
 
+.filter {
+  margin: 0;
+}
+
+.filter-button,
+.filter-button:is(:hover, :focus, :focus-visible, :active) {
+  text-transform: capitalize;
+}
+
+.filter-button:not([aria-pressed="true"]):hover {
+  filter: brightness(1.5);
+}
+
+.filter-button:not([aria-pressed="true"]):active {
+  filter: brightness(2);
+}
+
+[data-theme="dark"] .filter-button:not([aria-pressed="true"]):hover {
+  filter: brightness(0.8);
+}
+
+[data-theme="dark"] .filter-button:not([aria-pressed="true"]):active {
+  filter: brightness(0.7);
+}
+
+.filter-button[aria-pressed="true"] {
+  color: var(--clr-blue-500);
+}
+
 .todo {
   --border-clr: #02a;
 
