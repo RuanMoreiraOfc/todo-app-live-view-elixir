@@ -1,11 +1,12 @@
-<main class="app">
+<main class="app" data-theme={if is_nil(@darkmode?), do: "dark", else: @darkmode? && "dark"}>
   <header class="app-header">
     <h1 class="app-header-title">Todo</h1>
 
     <button
       class="app-header-button reset-all"
       aria-label='Toggle darkmode'
-      aria-pressed="false"
+      aria-pressed={"#{@darkmode?}"}
+      phx-click="toggle-darkmode"
     />
   </header>
 
