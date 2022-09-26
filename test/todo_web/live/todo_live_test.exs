@@ -21,6 +21,16 @@ defmodule TodoWeb.TodoLiveTest do
     assert has_element?(view, "[data-test=todo]", "Here'd come a todo title")
   end
 
+  test "user can't add a todo with repeated title", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/")
+
+    view
+    |> create_todo("Todo with same title")
+    |> create_todo("Todo with same title")
+
+    assert has_element?(view, "[data-test=alert]", "This todo already exists!")
+  end
+
   # HELPERS
 
   defp create_todo(view, title) do
