@@ -55,12 +55,39 @@ defmodule TodoWeb.TodoLiveTest do
     assert has_element?(view, "[data-test=todo]", "b")
   end
 
+  test "user can clear all completed todos", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/")
+
+    view
+    |> create_todo("a")
+    |> create_todo("b")
+    |> create_todo("c")
+    |> create_todo("d")
+    |> mark_todo_as_completed(1)
+    |> mark_todo_as_completed(3)
+    |> element("[data-test=clear-completed]")
+    |> render_click()
+
+    assert has_element?(view, "[data-test=todo]", "a") === false
+    assert has_element?(view, "[data-test=todo]", "b")
+    assert has_element?(view, "[data-test=todo]", "c") === false
+    assert has_element?(view, "[data-test=todo]", "d")
+  end
+
   # HELPERS
 
   defp create_todo(view, title) do
     view
     |> form("[data-test=form]", title: title)
     |> render_submit()
+
+    view
+  end
+
+  defp mark_todo_as_completed(view, index) do
+    view
+    |> element("[data-test=todo]:nth-child(#{index}) [data-test=todo-toggle]")
+    |> render_click()
 
     view
   end

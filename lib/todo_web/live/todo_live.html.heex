@@ -53,7 +53,13 @@
         <% end %>
       </ul>
 
-      <button class="app-footer-clear reset-all" phx-click="clear-completed">Clear Completed</button>
+      <button
+        class="app-footer-clear reset-all"
+        data-test="clear-completed"
+        phx-click="clear-completed"
+      >
+        Clear Completed
+      </button>
     </footer>
   </section>
 </main>
