@@ -93,6 +93,25 @@ defmodule TodoWeb.TodoLiveTest do
     assert has_element?(view, "[data-test=todo]", "d")
   end
 
+  test "user can filter by `completed` todos", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/")
+
+    view
+    |> create_todo("a")
+    |> create_todo("b")
+    |> create_todo("c")
+    |> create_todo("d")
+    |> mark_todo_as_completed(1)
+    |> mark_todo_as_completed(2)
+    |> mark_todo_as_completed(3)
+    |> filter_todos(:completed)
+
+    assert has_element?(view, "[data-test=todo]", "a")
+    assert has_element?(view, "[data-test=todo]", "b")
+    assert has_element?(view, "[data-test=todo]", "c")
+    assert has_element?(view, "[data-test=todo]", "d") === false
+  end
+
   # HELPERS
 
   defp create_todo(view, title) do
