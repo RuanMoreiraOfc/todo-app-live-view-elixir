@@ -10,6 +10,8 @@ defmodule TodoWeb.TodoLive do
     {:ok,
      assign(socket,
        darkmode?: Map.get(params, :darkmode, nil),
+       filters: [:all, :active, :completed],
+       filter_selected: :all,
        todos: [],
        uncompleted_count: 0
      )}

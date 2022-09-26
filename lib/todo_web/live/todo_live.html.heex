@@ -46,8 +46,9 @@
       </span>
 
       <ul class="app-footer-filters">
-        <.filter children="All" aria_pressed="true" /> <.filter children="Active" /> <.filter
-        children="Completed" />
+        <%= for filter <- @filters do %>
+          <.filter children={filter} aria_pressed={filter === @filter_selected} />
+        <% end %>
       </ul>
 
       <button class="app-footer-clear reset-all" phx-click="clear-completed">Clear Completed</button>
