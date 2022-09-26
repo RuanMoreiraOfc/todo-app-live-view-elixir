@@ -9,8 +9,11 @@ defmodule TodoWeb.TodoComponent do
         <input
           type="checkbox"
           class="todo-checkbox"
+          checked={@completed?}
           aria-label="Mark as completed"
           aria-describedby={id_text}
+          phx-click="toggle-todo"
+          phx-value-id={@id}
         />
         <span class="todo-icon bubble" />
         <span class="todo-text" id={id_text} ><%= @title %></span>
