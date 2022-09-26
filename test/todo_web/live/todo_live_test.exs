@@ -31,6 +31,17 @@ defmodule TodoWeb.TodoLiveTest do
     assert has_element?(view, "[data-test=alert]", "This todo already exists!")
   end
 
+  test "user can mark a todo as completed", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/")
+
+    view
+    |> create_todo("Title")
+    |> element("[data-test=todo-toggle]:not(:checked)")
+    |> render_click()
+
+    assert has_element?(view, "[data-test=todo-toggle]:checked")
+  end
+
   # HELPERS
 
   defp create_todo(view, title) do

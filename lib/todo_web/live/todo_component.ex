@@ -9,6 +9,7 @@ defmodule TodoWeb.TodoComponent do
         <input
           type="checkbox"
           class="todo-checkbox"
+          data-test="todo-toggle"
           checked={@completed?}
           aria-label="Mark as completed"
           aria-describedby={id_text}
