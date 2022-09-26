@@ -1,4 +1,28 @@
 <main class="app">
+  <header class="app-header">
+    <h1 class="app-header-title">Todo</h1>
+
+    <button
+      class="app-header-button reset-all"
+      aria-label='Toggle darkmode'
+      aria-pressed="false"
+    />
+  </header>
+
+  <form class="app-form">
+    <label class="app-form-label">
+      <span class="app-form-icon bubble" />
+      <input
+        type="text"
+        name="title"
+        class="app-form-input"
+        placeholder="Create a new todo"
+        required
+      />
+      <span class="focus-within" />
+    </label>
+  </form>
+
   <section class="app-todos">
     <ul class="app-todos-list">
       <.todo title="do sth" description_id="a-1"/> <.todo title="do more things"

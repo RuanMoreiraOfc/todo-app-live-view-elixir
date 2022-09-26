@@ -29,6 +29,14 @@
   inset: 0;
 }
 
+/* Font "Josefin Sans" has some vertical blank pixels */
+.app-form-input {
+  padding-block-start: 5px !important;
+}
+.app-header-button {
+  margin-top: -10px !important;
+}
+
 .app {
   --maxW: min(1440px * 0.35, 85%);
   --px: calc((100vw - var(--maxW)) / 2);
@@ -96,6 +104,80 @@
   }
 }
 
+.app-header {
+  all: revert;
+  padding-block-start: calc(var(--bg-height) * 0.25);
+  margin-block-end: calc(var(--bg-height) * 0.15);
+
+  color: var(--clr-neutral-50);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-header-title {
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+
+  z-index: 1;
+}
+
+.app-header-button,
+.app-header-button:is(:hover, :focus, :focus-visible, :active) {
+  height: 2.6rem;
+  aspect-ratio: 1/1;
+
+  border-radius: 50%;
+
+  color: inherit;
+
+  position: relative;
+
+  transition: 200ms ease;
+  transition-property: color, outline-offset;
+}
+
+.app-header-button:hover {
+  color: var(--clr-gray-100);
+}
+
+.app-header-button:focus-visible {
+  outline-offset: 2px;
+}
+
+.app-header-button:is(:active) {
+  color: var(--clr-gray-200);
+}
+
+.app-header-button::before {
+  --mask-image: url("/images/icon-moon.svg");
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background-color: currentColor;
+
+  -webkit-mask-size: cover;
+  -webkit-mask-image: var(--mask-image);
+  -webkit-mask-repeat: no-repeat;
+
+  mask-size: cover;
+  mask-image: var(--mask-image);
+  mask-repeat: no-repeat;
+}
+
+[data-theme="dark"] .app-header-button::before {
+  --mask-image: url("/images/icon-sun.svg");
+}
+
+.app-form {
+  margin-block-end: calc(var(--bg-height) * 0.08);
+}
+
+.app-form-label,
 .todo {
   width: 100%;
   height: 5rem;
@@ -112,14 +194,16 @@
   position: relative;
 }
 
-.todo:hover {
+:is(.app-form-label, .todo):hover {
   filter: brightness(0.95);
 }
 
-.todo:active {
+:is(.app-form-label, .todo):active {
   filter: brightness(0.9);
 }
 
+/* "phoenix.css" have a selector lvl 2 - input[type="text"] */
+input.app-form-input,
 .todo-text {
   all: initial;
   font: inherit;
@@ -127,6 +211,12 @@
   color: var(--clr-primary);
 
   font-weight: var(--fw-text);
+}
+
+:is(input.app-form-input, .todo-checkbox):focus-visible ~ .focus-within {
+  outline-style: solid;
+  outline-offset: 0;
+  z-index: 1;
 }
 
 .app-todos {
@@ -345,10 +435,4 @@
   mask-size: cover;
   mask-image: var(--mask-image);
   mask-repeat: no-repeat;
-}
-
-.todo-checkbox:focus-visible ~ .focus-within {
-  outline-style: solid;
-  outline-offset: 0;
-  z-index: 1;
 }
